@@ -2,8 +2,7 @@
 import dynamic from "next/dynamic";
 import HtmlText from "@/components/HtmlText";
 import { Canvas } from "@react-three/fiber";
-import { Suspense, useEffect, useRef } from "react";
-import { ScrollControls } from "@react-three/drei";
+import { Suspense } from "react";
 
 const Scene = dynamic(() => import("@/components/Scene"), { ssr: false });
 

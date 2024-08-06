@@ -6,11 +6,13 @@ import {
     CameraControls,
     Float,
     MeshReflectorMaterial,
+    Sparkles,
     Text,
     useTexture
 } from "@react-three/drei";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { GLTFLoader } from "three/examples/jsm/Addons.js";
+
 interface ModelProps {
     NAME: string;
     choixcouleur: number;
@@ -76,7 +78,8 @@ export default function Model({ NAME ,choixcouleur}:ModelProps ): JSX.Element {
         // Update cube position in the animation loop if window size changes
         if (cubeRef.current) {
             cubeRef.current.position.z = isWindowBelow1024 ? 0 : -1.7;
-
+            cubeRef.current.position.y = isWindowBelow1024 ? 1.3 : 1.5;
+            cubeRef.current.scale.set(1, 1, isWindowBelow1024 ? 1.2 : 1);
             //@ts-ignore
             groupRef.current.rotation.y = isWindowBelow1024
                 ? Math.PI * 0.5
@@ -127,6 +130,7 @@ export default function Model({ NAME ,choixcouleur}:ModelProps ): JSX.Element {
                         position={[0, 1.2, 0]}
 
                     >
+                           <Sparkles count={10} scale={  2} size={2}  speed={0.4} color={'#FF85BC'} />
                         <meshStandardMaterial
                             color={CouleurTrophez}
                             metalness={1}

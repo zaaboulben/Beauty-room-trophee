@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback } from "react";
-import { useGLTF } from "@react-three/drei";
-import { Mesh, BufferGeometry, Material, Vector3, Euler } from "three";
+import { Sparkles, useGLTF } from "@react-three/drei";
+import { Mesh } from "three";
 
 interface GLTFResult {
   nodes: {
@@ -31,10 +31,14 @@ const BouchonEncreGroup = React.memo(function BouchonEncreGroup({ Bouchon, Encre
   return (
     <group position={[-1,0,-5] }>
       <mesh geometry={Bouchon.geometry} position={Bouchon.position} castShadow>
+      <Sparkles count={10} scale={  2} size={2}  speed={0.4} color={'#FF85BC'} />
+
         <meshStandardMaterial color={BOUCHON_COLOR} metalness={BOUCHON_METALNESS} roughness={BOUCHON_ROUGHNESS} />
       </mesh>
       <mesh geometry={Encre.geometry} position={Encre.position} castShadow>
         <meshStandardMaterial color={ENCRE_COLOR} metalness={ENCRE_METALNESS} roughness={ENCRE_ROUGHNESS} />
+        <Sparkles count={10} scale={  2} size={2}  speed={0.4} color={'#FF85BC'} />
+
       </mesh>
     </group>
   );
@@ -44,13 +48,17 @@ const TasseGroup = React.memo(function TasseGroup({ tasse, crayonlist }: { tasse
   const renderCrayons = useCallback(() => 
     crayonlist.map((crayon: Mesh, index: number) => (
       <mesh
+      
         key={index}
         geometry={crayon.geometry}
         material={crayon.material}
         position={crayon.position}
         rotation={crayon.rotation}
         castShadow
-      />
+      >
+              <Sparkles count={10} scale={  2} size={2}  speed={0.4} color={'#FF85BC'} />
+
+      </mesh>
     )),
     [crayonlist]
   );
@@ -65,6 +73,8 @@ const TasseGroup = React.memo(function TasseGroup({ tasse, crayonlist }: { tasse
         rotation={tasse.rotation}
         castShadow
       >
+              <Sparkles count={10} scale={  2} size={2}  speed={0.4} color={'#FF85BC'} />
+
         <meshStandardMaterial color={TASSE_COLOR} metalness={TASSE_METALNESS} roughness={TASSE_ROUGHNESS} />
       </mesh>
       {renderCrayons()}
@@ -74,21 +84,27 @@ const TasseGroup = React.memo(function TasseGroup({ tasse, crayonlist }: { tasse
 
 const MirrorGroup = React.memo(function MirrorGroup({ MakeUpMirror, MakeUpMirrorGlass }: { MakeUpMirror: Mesh, MakeUpMirrorGlass: Mesh }) {
   return (
-    <group position={[6, 0.13, 1.8]}>
+    <group position={[5.5, 0.13, 1]}>
       <mesh
         geometry={MakeUpMirror.geometry}
         position={MakeUpMirror.position}
         material={MakeUpMirror.material}
         castShadow
-        rotation-y={Math.PI * 0.35}
-      />
+        rotation-y={Math.PI * 0.55}
+      >
+              <Sparkles count={10} scale={  2} size={2}  speed={0.4} color={'#FF85BC'} />
+
+      </mesh>
       <mesh
         geometry={MakeUpMirrorGlass.geometry}
         position={MakeUpMirrorGlass.position}
         castShadow
         material={MakeUpMirrorGlass.material}
-        rotation-y={Math.PI * 0.35}
-      />
+        rotation-y={Math.PI * 0.55}
+      >
+              <Sparkles count={10} scale={  2} size={2}  speed={0.4} color={'#FF85BC'} />
+
+      </mesh>
     </group>
   );
 });
@@ -104,13 +120,16 @@ const ElementDeco = React.memo(function ElementDeco(): JSX.Element {
   const MakeUpMirrorGlass = useMemo(() => nodes.makeUpMirrorGlass, [nodes]);
   const crayonlist = useMemo(() => nodes.Crayon.children, [nodes]);
 
-  return (
+  return (<> 
+
     <group position={[0, 1.3, 0]}>
       <BouchonEncreGroup Bouchon={Bouchon} Encre={Encre} />
 
       <TasseGroup tasse={tasse} crayonlist={crayonlist} />
       <MirrorGroup MakeUpMirror={MakeUpMirror} MakeUpMirrorGlass={MakeUpMirrorGlass} />
     </group>
+    </>
+
   );
 });
 

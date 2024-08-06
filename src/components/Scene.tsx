@@ -2,7 +2,7 @@
 
 
 "use client";
-import {  OrbitControls, Environment } from "@react-three/drei";
+import {  OrbitControls, Environment, Sparkles } from "@react-three/drei";
 import Model from "./Model";
 import Lights from "./Lights";
 import ElementDeco from "./ElementDeco";
@@ -27,13 +27,16 @@ const Scene = () => {
             <OrbitControls />
 
             <Lights />
+           
+                <ElementDeco />
+
+               
 
 
             
                 <Model NAME='BENYAMINE ZAABOUL '
                     choixcouleur={2}
                 />
-                <ElementDeco />
 
             </group>
 

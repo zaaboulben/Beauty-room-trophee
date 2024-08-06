@@ -17,7 +17,8 @@
     "r3f-perf": "^1.0.0-beta",
     "react": "^18",
     "react-dom": "^18",
-    "three": "^0.167.0"
+    "three": "^0.167.0",
+    "vercel": "^35.2.3"
   },
   "devDependencies": {
     "@types/node": "^20",
