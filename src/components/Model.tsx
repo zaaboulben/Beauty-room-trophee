@@ -1,6 +1,5 @@
 import { extend, useFrame, useLoader } from "@react-three/fiber";
 import * as THREE from "three";
-
 import {
     CameraControls,
     Float,
@@ -13,7 +12,7 @@ import {
     useCubeTexture,
     useTexture
 } from "@react-three/drei";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { GLTFLoader } from "three/examples/jsm/Addons.js";
 
 interface ModelProps {
@@ -21,88 +20,88 @@ interface ModelProps {
     choixcouleur: number;
 }
 
+interface TropheeProps {
+    CouleurTrophez: THREE.Color;
+}
+
+interface GLTFResult {
+    nodes: {
+        LogoV2: THREE.Mesh;
+        Base003: THREE.Mesh;
+        Base003_1: THREE.Mesh;
+    };
+}
+
 export default function Model({ NAME, choixcouleur }: ModelProps): JSX.Element {
-    const groupRef = useRef<THREE.Group | null>(null);
-    const cameraControlsRef = useRef<CameraControls | null>(null);
+    const groupRef = useRef<THREE.Group>(null);
+    const cameraControlsRef = useRef<CameraControls>(null);
     const cubeRef = useRef<THREE.Mesh>(null);
 
     const gradient = useTexture("/gradient/gradient.png");
-    gradient.rotation = -Math.PI / 2;
-
-    // const choixcouleur = 1;
-    const glb = useLoader(GLTFLoader, "/model/trophyblend.glb");
-    const CouleurTrophez = new THREE.Color("#C0C0C0");
-
-    if (choixcouleur === 1) {
-        CouleurTrophez.set("#C0C0C0");
-    } else if (choixcouleur === 2) {
-        CouleurTrophez.set("#FFC2B7"); //FFC2B7 e7968b
+    if (gradient) {
+        gradient.rotation = -Math.PI / 2;
     }
 
-    const [isWindowBelow1024, setIsWindowBelow1024] = useState(
+    const glb = useLoader(GLTFLoader, "/model/trophyblend.glb");
+    const CouleurTrophez = useMemo(() => {
+        const color = new THREE.Color();
+        return choixcouleur === 1 ? color.set("#C0C0C0") : color.set("#FFC2B7");
+    }, [choixcouleur]);
+
+    const [isWindowBelow1024, setIsWindowBelow1024] = useState<boolean>(
         window.innerWidth < 1024
     );
 
-    // Function to check if window width is below 1024 pixels
     const checkWindowSize = useCallback(() => {
         setIsWindowBelow1024(window.innerWidth < 1024);
     }, []);
 
     useEffect(() => {
-        // Check window size on mount
         checkWindowSize();
-        // Add event listener to check window size on resize
         window.addEventListener("resize", checkWindowSize);
 
-        // Clean up event listener on unmount
         return () => {
             window.removeEventListener("resize", checkWindowSize);
         };
     }, [checkWindowSize]);
 
-    // Function to automatically move the camera to fit the cube
     const automove = useCallback(() => {
-        cameraControlsRef.current?.fitToBox(
-            cubeRef.current as THREE.Object3D<THREE.Object3DEventMap> | THREE.Box3,
-            true
-        );
-        //  cameraControlsRef.current?.setPosition(1,6,4);
+        if (cameraControlsRef.current && cubeRef.current) {
+            cameraControlsRef.current.fitToBox(
+                cubeRef.current,
+                true
+            );
+        }
     }, []);
 
-    // Frame loop to perform automatic movement after 1 second
-    useFrame((state, delta) => {
+    useFrame((state) => {
         if (state.clock.elapsedTime > 1) {
             automove();
         }
 
-        // Update cube position in the animation loop if window size changes
         if (cubeRef.current) {
             cubeRef.current.position.z = isWindowBelow1024 ? 0 : -1.7;
             cubeRef.current.position.y = isWindowBelow1024 ? 1.3 : 1.5;
             cubeRef.current.scale.set(1, 1, isWindowBelow1024 ? 1.2 : 1);
-            //@ts-ignore
-            groupRef.current.rotation.y = isWindowBelow1024
-                ? Math.PI * 0.5
-                : Math.PI * 0.35;
+
+            if (groupRef.current) {
+                groupRef.current.rotation.y = isWindowBelow1024
+                    ? Math.PI * 0.5
+                    : Math.PI * 0.35;
+            }
         }
     });
 
-    const getTextScale = (
+    const getTextScale = useCallback((
         text: string,
         maxWidth: number,
         fontSize: number
     ): number => {
-        const textWidth = text.length * fontSize * 0.6; // Approximate text width
+        const textWidth = text.length * fontSize * 0.6;
         return textWidth > maxWidth ? maxWidth / textWidth : 1;
-    };
-    const name = NAME;
-    //@ts-ignore
-    const text = NAME;
-    const fontSize = 16;
-    const maxWidth = 2.2; // Maximum width the text can occupy
+    }, []);
 
-    const textScale = getTextScale(text, maxWidth, fontSize);
-
+    const textScale = useMemo(() => getTextScale(NAME, 2.2, 16), [NAME, getTextScale]);
 
     return (
         <group position={[0.5, 2, 0]}>
@@ -116,15 +115,14 @@ export default function Model({ NAME, choixcouleur }: ModelProps): JSX.Element {
 
                 <Trophee CouleurTrophez={CouleurTrophez} />
 
-
                 <Text
-                    fontSize={fontSize * textScale}
+                    fontSize={16 * textScale}
                     color={"black"}
                     fontWeight={"bold"}
                     rotation={[0, -Math.PI * 0.5, 0]}
                     position={[-0.8, 0.04, 0]}
                 >
-                    {text}
+                    {NAME}
                 </Text>
             </group>
 
@@ -134,7 +132,6 @@ export default function Model({ NAME, choixcouleur }: ModelProps): JSX.Element {
                 receiveShadow
                 frustumCulled={true}
             >
-
                 <boxGeometry args={[1000, 1000, 1]} />
 
                 <MeshReflectorMaterial
@@ -150,69 +147,62 @@ export default function Model({ NAME, choixcouleur }: ModelProps): JSX.Element {
                     maxDepthThreshold={1}
                     metalness={0}
                     roughness={0}
-                //   transparent
-                //   opacity={0.4}
                 />
             </mesh>
         </group>
     );
 }
 
-function Trophee(CouleurTrophez) {
-    const { nodes } = useLoader(GLTFLoader, "/model/tropheeV2.glb");
+function Trophee({ CouleurTrophez }: TropheeProps): JSX.Element {
+    const { nodes } = useLoader(GLTFLoader, "/model/tropheeV2.glb") as GLTFResult;
     const gradient = useTexture("/gradient/gradient.png");
-    gradient.rotation = -Math.PI / 2;
-
-    const tropheeLogo = nodes.LogoV2.geometry;
-    const tropheeBase = nodes.Base003.geometry;
-    const tropheeBase1 = nodes.Base003_1.geometry;
-    const tropheeBaseMat = nodes.Base003.material;
-    const tropheeBaseMat1 = nodes.Base003_1.material;
-
-    console.log(nodes);
-
-    console.log(CouleurTrophez.CouleurTrophez);
+    if (gradient) {
+        gradient.rotation = -Math.PI / 2;
+    }
 
     return (
         <group>
-
             <Float
-                speed={1} // Animation speed, defaults to 1
-                rotationIntensity={0.2} // XYZ rotation intensity, defaults to 1
-                floatIntensity={0.2} // Up/down float intensity, works like a multiplier with floatingRange,defaults to 1
+                speed={1}
+                rotationIntensity={0.2}
+                floatIntensity={0.2}
                 floatingRange={[0.5, 1]}
             >
                 <mesh
-                    geometry={tropheeLogo}
+                    geometry={nodes.LogoV2.geometry}
                     position={[0, -0.9, 0]}
                     castShadow
                     receiveShadow
                 >
-
                     <meshStandardMaterial
-                        color={CouleurTrophez.CouleurTrophez}
+                        color={CouleurTrophez}
                         metalness={1}
                         roughness={0.4}
                     />
-                       <Sparkles count={20} scale={  2} size={2}  position={[0,1.4,0]} speed={0.4} color={'#FF85BC'} />
-
+                    <Sparkles
+                        count={20}
+                        scale={2}
+                        size={2}
+                        position={[0, 1.4, 0]}
+                        speed={0.4}
+                        color={'#FF85BC'}
+                    />
                 </mesh>
             </Float>
 
             <mesh
-                geometry={tropheeBase}
+                geometry={nodes.Base003.geometry}
                 position={[0, -0.5, 0]}
-                material={tropheeBaseMat}
+                material={nodes.Base003.material}
                 rotation-y={Math.PI}
                 castShadow
                 receiveShadow
-            >
+            />
 
-            </mesh>
             <mesh
-                geometry={tropheeBase1}
+                geometry={nodes.Base003_1.geometry}
                 position={[0, -0.5, 0]}
-                material={tropheeBaseMat1}
+                material={nodes.Base003_1.material}
                 rotation-y={Math.PI}
                 castShadow
                 receiveShadow

@@ -4,14 +4,14 @@ import { useHelper } from "@react-three/drei";
 import { DirectionalLightHelper, DirectionalLight, PointLightHelper } from "three";
 
 const Lights = () => {
-  const light1 = useRef();
-  const light2 = useRef();
-  const light3 = useRef();
-  const light4 = useRef();
-  useHelper(light1, DirectionalLightHelper, 0.2, );
-  useHelper(light2, DirectionalLightHelper, 0.2, "green");
-  useHelper(light3, DirectionalLightHelper, 0.2, "blue");
-  useHelper(light4, DirectionalLightHelper, 0.2, "yellow")
+  // const light1 = useRef();
+  // const light2 = useRef();
+  // const light3 = useRef();
+  // const light4 = useRef();
+  // useHelper(light1, DirectionalLightHelper, 0.2, );
+  // useHelper(light2, DirectionalLightHelper, 0.2, "green");
+  // useHelper(light3, DirectionalLightHelper, 0.2, "blue");
+  // useHelper(light4, DirectionalLightHelper, 0.2, "yellow")
 
 
   return (
