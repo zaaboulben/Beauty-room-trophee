@@ -65,7 +65,7 @@ const TasseGroup = React.memo(function TasseGroup({ tasse, crayonlist }: { tasse
 
   return (
     <group rotation={[0, Math.PI * 0.6, 0]}
-        position={[-0.2, 0, -2]}
+        position={[-0.2, .1, -2]}
     >
       <mesh
         geometry={tasse.geometry}
@@ -116,8 +116,7 @@ const ElementDeco = React.memo(function ElementDeco(): JSX.Element {
   const Bouchon = useMemo(() => nodes.BouchonEncre, [nodes]);
   const Encre = useMemo(() => nodes.EncreAtatouage, [nodes]);
   const tasse = useMemo(() => nodes.tasse, [nodes]);
-  const MakeUpMirror = useMemo(() => nodes.MakeUpMirror, [nodes]);
-  const MakeUpMirrorGlass = useMemo(() => nodes.makeUpMirrorGlass, [nodes]);
+
   const crayonlist = useMemo(() => nodes.Crayon.children, [nodes]);
 
   return (<> 
@@ -126,7 +125,7 @@ const ElementDeco = React.memo(function ElementDeco(): JSX.Element {
       <BouchonEncreGroup Bouchon={Bouchon} Encre={Encre} />
 
       <TasseGroup tasse={tasse} crayonlist={crayonlist} />
-      <MirrorGroup MakeUpMirror={MakeUpMirror} MakeUpMirrorGlass={MakeUpMirrorGlass} />
+      {/* <MirrorGroup MakeUpMirror={MakeUpMirror} MakeUpMirrorGlass={MakeUpMirrorGlass} /> */}
     </group>
     </>
 

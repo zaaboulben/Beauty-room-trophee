@@ -1,13 +1,16 @@
-import { useFrame, useLoader } from "@react-three/fiber";
+import { extend, useFrame, useLoader } from "@react-three/fiber";
 import * as THREE from "three";
-
 
 import {
     CameraControls,
     Float,
+    GradientTexture,
+    GradientType,
     MeshReflectorMaterial,
+    shaderMaterial,
     Sparkles,
     Text,
+    useCubeTexture,
     useTexture
 } from "@react-three/drei";
 import { useEffect, useRef, useState, useCallback } from "react";
@@ -18,24 +21,22 @@ interface ModelProps {
     choixcouleur: number;
 }
 
-export default function Model({ NAME ,choixcouleur}:ModelProps ): JSX.Element {
-
+export default function Model({ NAME, choixcouleur }: ModelProps): JSX.Element {
     const groupRef = useRef<THREE.Group | null>(null);
     const cameraControlsRef = useRef<CameraControls | null>(null);
     const cubeRef = useRef<THREE.Mesh>(null);
 
     const gradient = useTexture("/gradient/gradient.png");
+    gradient.rotation = -Math.PI / 2;
 
     // const choixcouleur = 1;
     const glb = useLoader(GLTFLoader, "/model/trophyblend.glb");
     const CouleurTrophez = new THREE.Color("#C0C0C0");
-  
 
-    
     if (choixcouleur === 1) {
         CouleurTrophez.set("#C0C0C0");
     } else if (choixcouleur === 2) {
-        CouleurTrophez.set("#e7968b");
+        CouleurTrophez.set("#FFC2B7"); //FFC2B7 e7968b
     }
 
     const [isWindowBelow1024, setIsWindowBelow1024] = useState(
@@ -65,7 +66,6 @@ export default function Model({ NAME ,choixcouleur}:ModelProps ): JSX.Element {
             cubeRef.current as THREE.Object3D<THREE.Object3DEventMap> | THREE.Box3,
             true
         );
-
         //  cameraControlsRef.current?.setPosition(1,6,4);
     }, []);
 
@@ -86,6 +86,7 @@ export default function Model({ NAME ,choixcouleur}:ModelProps ): JSX.Element {
                 : Math.PI * 0.35;
         }
     });
+
     const getTextScale = (
         text: string,
         maxWidth: number,
@@ -94,7 +95,6 @@ export default function Model({ NAME ,choixcouleur}:ModelProps ): JSX.Element {
         const textWidth = text.length * fontSize * 0.6; // Approximate text width
         return textWidth > maxWidth ? maxWidth / textWidth : 1;
     };
-    console.log(NAME, "NAME");
     const name = NAME;
     //@ts-ignore
     const text = NAME;
@@ -103,104 +103,120 @@ export default function Model({ NAME ,choixcouleur}:ModelProps ): JSX.Element {
 
     const textScale = getTextScale(text, maxWidth, fontSize);
 
+
     return (
         <group position={[0.5, 2, 0]}>
-           
-
-            <CameraControls ref={cameraControlsRef} enabled={true} 
-            />
+            <CameraControls ref={cameraControlsRef} enabled={true} />
 
             <group ref={groupRef} position={[2, 0, 0]}>
                 <mesh ref={cubeRef} position-y={1.3} position-z={0}>
-                    <boxGeometry args={[4, 3, 5]} />
-                    <meshBasicMaterial  wireframe visible={false} />
+                    <boxGeometry args={[5, 3, 6]} />
+                    <meshBasicMaterial wireframe visible={false} />
                 </mesh>
 
-                <Float
-                    speed={1} // Animation speed, defaults to 1
-                    rotationIntensity={0.2} // XYZ rotation intensity, defaults to 1
-                    floatIntensity={0.2} // Up/down float intensity, works like a multiplier with floatingRange,defaults to 1
-                    floatingRange={[0.5, 1]}
-                >
-                    <mesh
-                        geometry={(glb.scene.children[0] as THREE.Mesh).geometry}
-                        castShadow
-                        receiveShadow
-                        rotation={[-Math.PI * 0.25, 0, 0]}
-                        position={[0, 1.2, 0]}
+                <Trophee CouleurTrophez={CouleurTrophez} />
 
-                    >
-                           <Sparkles count={10} scale={  2} size={2}  speed={0.4} color={'#FF85BC'} />
-                        <meshStandardMaterial
-                            color={CouleurTrophez}
-                            metalness={1}
-                            roughness={0.4}
-
-
-                        />
-
-
-
-                    </mesh>
-                </Float>
-                    
-                <mesh
-                    geometry={(glb.scene.children[1] as THREE.Mesh).geometry}
-                    castShadow
-                    receiveShadow
-                >
-                    <meshStandardMaterial color={CouleurTrophez}  metalness={1}
-                        roughness={0.4}
-                        />
-                </mesh>
-
-                <mesh
-                    geometry={(glb.scene.children[2] as THREE.Mesh).geometry}
-                    castShadow
-                    receiveShadow
-                >
-                    <meshStandardMaterial
-                        color="#FFF2F2"
-                        metalness={1}
-                        roughness={0.4}
-                     
-                        
-                    />
-                </mesh>
 
                 <Text
                     fontSize={fontSize * textScale}
                     color={"black"}
                     fontWeight={"bold"}
                     rotation={[0, -Math.PI * 0.5, 0]}
-                    position={[-0.3, 0.04, 0]}
+                    position={[-0.8, 0.04, 0]}
                 >
                     {text}
                 </Text>
             </group>
+
             <mesh
                 rotation={[-Math.PI * 0.5, 0, Math.PI * 0.5]}
-                position={[0, -0.55, 0]}
+                position={[0, -1, 0]}
                 receiveShadow
-                castShadow
+                frustumCulled={true}
             >
-                <circleGeometry args={[100, 64]} />
-                <meshStandardMaterial map={gradient} metalness={1} roughness={0.7} />
-                {/* < MeshReflectorMaterial
-            blur={[400, 100]}
-            resolution={1024}
-            mixBlur={1}
-            mixStrength={.5}
-            map={gradient2} 
-            color={0x000000}
-            
-            depthScale={1}
-            minDepthThreshold={0.85}
-            metalness={1}
-            roughness={0.7}
-          /> */}
+
+                <boxGeometry args={[1000, 1000, 1]} />
+
+                <MeshReflectorMaterial
+                    mirror={0.6}
+                    blur={[400, 100]}
+                    resolution={1024}
+                    mixBlur={1}
+                    map={gradient}
+                    mixStrength={1}
+                    depthScale={1}
+                    depthToBlurRatioBias={1}
+                    minDepthThreshold={0.85}
+                    maxDepthThreshold={1}
+                    metalness={0}
+                    roughness={0}
+                //   transparent
+                //   opacity={0.4}
+                />
+            </mesh>
+        </group>
+    );
+}
+
+function Trophee(CouleurTrophez) {
+    const { nodes } = useLoader(GLTFLoader, "/model/tropheeV2.glb");
+    const gradient = useTexture("/gradient/gradient.png");
+    gradient.rotation = -Math.PI / 2;
+
+    const tropheeLogo = nodes.LogoV2.geometry;
+    const tropheeBase = nodes.Base003.geometry;
+    const tropheeBase1 = nodes.Base003_1.geometry;
+    const tropheeBaseMat = nodes.Base003.material;
+    const tropheeBaseMat1 = nodes.Base003_1.material;
+
+    console.log(nodes);
+
+    console.log(CouleurTrophez.CouleurTrophez);
+
+    return (
+        <group>
+
+            <Float
+                speed={1} // Animation speed, defaults to 1
+                rotationIntensity={0.2} // XYZ rotation intensity, defaults to 1
+                floatIntensity={0.2} // Up/down float intensity, works like a multiplier with floatingRange,defaults to 1
+                floatingRange={[0.5, 1]}
+            >
+                <mesh
+                    geometry={tropheeLogo}
+                    position={[0, -0.9, 0]}
+                    castShadow
+                    receiveShadow
+                >
+
+                    <meshStandardMaterial
+                        color={CouleurTrophez.CouleurTrophez}
+                        metalness={1}
+                        roughness={0.4}
+                    />
+                       <Sparkles count={20} scale={  2} size={2}  position={[0,1.4,0]} speed={0.4} color={'#FF85BC'} />
+
+                </mesh>
+            </Float>
+
+            <mesh
+                geometry={tropheeBase}
+                position={[0, -0.5, 0]}
+                material={tropheeBaseMat}
+                rotation-y={Math.PI}
+                castShadow
+                receiveShadow
+            >
 
             </mesh>
+            <mesh
+                geometry={tropheeBase1}
+                position={[0, -0.5, 0]}
+                material={tropheeBaseMat1}
+                rotation-y={Math.PI}
+                castShadow
+                receiveShadow
+            />
         </group>
     );
 }
