@@ -22,7 +22,7 @@ useEffect(() => {
 
 
      <div className={` ${visible ? "visible     " : "hidden"} absolute z-50 inset-0 flex flex-col items-center justify-center   text-white w-full h-full p-4 sm:p-10 md:p-20 `}> 
-      <div className="p-4 border border-white w-full h-full inline-flex ">
+      <div className="p-4 border border-gray-500  w-full h-full inline-flex ">
         <div className="h-full w-1/2 pt-20 pb-20 pl-14" >
         <div className=" flex-col flex gap-5 pb-16">
         <h1 className="text-lg sm:text-xl md:text-4xl font-bold  ">CERTIFICATION  </h1>

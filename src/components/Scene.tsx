@@ -31,17 +31,17 @@ const Scene = () => {
 
             <Lights />
 
-            <ElementDeco />
+            {/* <ElementDeco /> */}
 
 
 
             <EffectComposer>
-      {/* <DepthOfField focusDistance={0.002} focalLength={0.1} bokehScale={2} height={480} /> */}
+      <DepthOfField focusDistance={.02} focalLength={0.1} bokehScale={2} height={480} />
       {/* <Bloom luminanceThreshold={0.1} luminanceSmoothing={0.1} height={3000} kernelSize={KernelSize.SMALL} /> */}
-      <Noise opacity={0.02} />
+      {/* <Noise opacity={0.02} /> */}
     </EffectComposer>
 
-            <Model NAME='BENYAMINE ZAABOUL '
+            <Model NAME='BENYAMINE ZAABOUL  '
                 choixcouleur={2}
             />
 

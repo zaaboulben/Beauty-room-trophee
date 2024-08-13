@@ -18,17 +18,17 @@ const Lights = () => {
     <group>
       <directionalLight 
       // ref={light1}
-      position={[6, 7, 6]} target-position={[2.5, 2,0]} intensity={3}   castShadow   />
+      position={[6, 7, 6]} target-position={[2.5, 2,0]} intensity={2}   castShadow   />
  
       <directionalLight
       //  ref={light2}
-      position={[0, 7, -6]} target-position={[2.5,2,0]} intensity={3}  shadow-mapSize={[1024, 1024]} />
+      position={[0, 7, -6]} target-position={[2.5,2,0]} intensity={2}  shadow-mapSize={[1024, 1024]} />
       <directionalLight 
       // ref={light3}
-      position={[6, 7, 6]} target-position={[2.5,2,0]} intensity={3}   shadow-mapSize={[1024, 1024]}/>
+      position={[6, 7, 6]} target-position={[2.5,2,0]} intensity={2}   shadow-mapSize={[1024, 1024]}/>
       <directionalLight 
       //ref={light4}
-      position={[-6, 7, 6]} target-position={[2.5,2,0]} intensity={3} castShadow  />
+      position={[-6, 7, 6]} target-position={[2.5,2,0]} intensity={2} castShadow  />
 
     </group>
   );
