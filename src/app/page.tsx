@@ -30,7 +30,8 @@ export default function Home() {
           } }  >
             <Scene />
             
-            <fog attach="fog" args={["#260226", 0.1, 35]} />
+            <fog attach="fog" args={["#260226", 0.1, 25]} />
+
 
           </Canvas>
           </Suspense>

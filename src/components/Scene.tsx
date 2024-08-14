@@ -1,13 +1,8 @@
-
-
-
 "use client";
-import { OrbitControls, Environment, Sparkles } from "@react-three/drei";
+import { OrbitControls, Environment } from "@react-three/drei";
 import Model from "./Model";
 import Lights from "./Lights";
-import ElementDeco from "./ElementDeco";
-import { Bloom, DepthOfField, EffectComposer, Noise } from "@react-three/postprocessing";
-import { KernelSize } from 'postprocessing';
+import {  DepthOfField, EffectComposer, Noise } from "@react-three/postprocessing";
 
 
 const Scene = () => {
@@ -37,11 +32,9 @@ const Scene = () => {
 
             <EffectComposer>
       <DepthOfField focusDistance={.02} focalLength={0.1} bokehScale={2} height={480} />
-      {/* <Bloom luminanceThreshold={0.1} luminanceSmoothing={0.1} height={3000} kernelSize={KernelSize.SMALL} /> */}
-      {/* <Noise opacity={0.02} /> */}
     </EffectComposer>
 
-            <Model NAME='BENYAMINE ZAABOUL  '
+            <Model NAME='melissa dupont '
                 choixcouleur={2}
             />
 
