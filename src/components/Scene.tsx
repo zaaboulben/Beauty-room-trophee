@@ -1,8 +1,10 @@
 "use client";
-import { OrbitControls, Environment } from "@react-three/drei";
+import { OrbitControls, Environment, Center } from "@react-three/drei";
 import Model from "./Model";
 import Lights from "./Lights";
 import {  DepthOfField, EffectComposer, Noise } from "@react-three/postprocessing";
+import SceneAnimated from "./SceneAnimated";
+import Particles from "./Particles";
 
 
 const Scene = () => {
@@ -22,21 +24,27 @@ const Scene = () => {
                 ground={{ height: 10, scale: 0 }}
             />
 
-            <OrbitControls />
 
             <Lights />
-
+            {/* <OrbitControls /> */}
             {/* <ElementDeco /> */}
 
 
 
-            <EffectComposer>
+            {/* <EffectComposer>
       <DepthOfField focusDistance={.02} focalLength={0.1} bokehScale={2} height={480} />
     </EffectComposer>
 
-            <Model NAME='melissa dupont '
+            <Model NAME='melissa dupont henry'
                 choixcouleur={2}
-            />
+            /> */}
+            <Center>
+
+            </Center>
+            <SceneAnimated/>
+
+
+            {/* <Particles /> */}
 
         </group>
 

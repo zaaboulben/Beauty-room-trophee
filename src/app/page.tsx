@@ -20,10 +20,9 @@ export default function Home() {
 
           <Canvas  
            shadows={"soft"}   gl={{ antialias: true }} dpr={[1,2]} camera={{
-            // position:[0,3,30],
           fov: 60,
           near: 0.1,
-          far: 1000,
+          far: 100,
           
 
 

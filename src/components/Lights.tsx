@@ -18,18 +18,21 @@ const Lights = () => {
     <group>
       <directionalLight 
       // ref={light1}
-      position={[6, 7, 6]} target-position={[2.5, 2,0]} intensity={2}   castShadow   />
+      position={[6, 7, 6]} target-position={[2.5, 2,0]} intensity={2} shadow-normalBias={ 0.14 }   castShadow   />
  
       <directionalLight
       //  ref={light2}
-      position={[0, 7, -6]} target-position={[2.5,2,0]} intensity={2}  shadow-mapSize={[1024, 1024]} />
+      position={[0, 7, -6]} target-position={[2.5,2,0]} intensity={2} shadow-normalBias={ 0.14 }  shadow-mapSize={[1024, 1024]} />
       <directionalLight 
       // ref={light3}
-      position={[6, 7, 6]} target-position={[2.5,2,0]} intensity={2}   shadow-mapSize={[1024, 1024]}/>
+      position={[6, 7, 6]} target-position={[2.5,2,0]} intensity={2}  shadow-normalBias={ 0.14 }  shadow-mapSize={[1024, 1024]}/>
       <directionalLight 
       //ref={light4}
-      position={[-6, 7, 6]} target-position={[2.5,2,0]} intensity={2} castShadow  />
+      position={[-6, 7, 6]} target-position={[2.5,2,0]} intensity={2} shadow-normalBias={ 0.14 }  castShadow  />
 
+    <ambientLight intensity={1} >
+
+    </ambientLight>
     </group>
   );
 };

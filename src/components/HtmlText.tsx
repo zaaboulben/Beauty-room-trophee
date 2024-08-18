@@ -5,23 +5,21 @@ import React, { useEffect } from "react";
 
 const HtmlText = () => {
   //make a  function for making the text appear on the screen
-const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = React.useState(false);
 
-useEffect(() => {
-  const timer = setTimeout(() => {
-    setVisible(true);
-    console.log("visible", visible);
-  }, 2500);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setVisible(true);
+      console.log("visible", visible);
+    }, 2500);
 
-  // Nettoyer le timer lorsqu'il n'est plus nécessaire
-  return () => clearTimeout(timer);
-}, [visible]);
-  
+    // Nettoyer le timer lorsqu'il n'est plus nécessaire
+    return () => clearTimeout(timer);
+  }, [visible]);
+
   return (
- 
 
-
-     <div className={` ${visible ? "visible     " : "hidden"} absolute z-50 inset-0 flex flex-col items-center justify-center   text-white w-full h-full p-4 sm:p-10 md:p-20 `}> 
+     <div className={` ${visible ? "visible     " : "hidden"} absolute z-50 inset-0 flex flex-col items-center justify-center   text-white w-full h-full p-4 sm:p-10 md:p-20 pointer-events-none `}> 
       <div className="p-4 border border-gray-500  w-full h-full inline-flex ">
         <div className="h-full w-1/2 pt-20 pb-20 pl-14" >
         <div className=" flex-col flex gap-5 pb-16">
@@ -41,7 +39,7 @@ useEffect(() => {
           </svg>
         </div>
         </div>
-    
+
         <div className="h-full w-1/2 pt-20 pb-20 pr-14 text-right ">
         <div>
 
@@ -51,6 +49,8 @@ useEffect(() => {
 
       </div>
     </div>
+      
+
   );
 };
 

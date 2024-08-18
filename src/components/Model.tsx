@@ -42,7 +42,7 @@ interface GLTFResult {
         Parchemin001: THREE.Mesh;
         Parchemin001_1: THREE.Mesh;
 
-        
+
     };
 }
 
@@ -101,7 +101,7 @@ export default function Model({ NAME, choixcouleur }: ModelProps): JSX.Element {
 
     const [cameraInitialPosition] = useState(() => new THREE.Vector3(0, 4, 6.7));
     const [cameraPositionS] = useState(() => new THREE.Vector3(0, 3, 30));
-    const [cameraPositionE] = useState(() => new THREE.Vector3(0, 1.5, 6.7));
+    const [cameraPositionE] = useState(() => new THREE.Vector3(0, 1.5, 6));
     //  const [cameraLookAt, setCameraLookAT] = useState(() => new THREE.Vector3(cubeRef.current?.position ))
 
     const groupPosition = useMemo(() => {
@@ -110,6 +110,7 @@ export default function Model({ NAME, choixcouleur }: ModelProps): JSX.Element {
         } else {
             return [1.5, 0, 0];
         }
+
     }, [isWindowBelow1024]);
 
     const groupRotation = useMemo(() => {
@@ -126,16 +127,19 @@ export default function Model({ NAME, choixcouleur }: ModelProps): JSX.Element {
         );
 
         camera.lookAt(cameralook);
+        isWindowBelow1024 ? setIsWindowBelow1024(true) : setIsWindowBelow1024(false);
+
 
         const elapsedTime = state.clock.elapsedTime;
-        const cameraDistance = isWindowBelow1024 ? 8 : 6.7;
+        const cameraDistance = 6;
 
         if (elapsedTime < 3) {
-            // Initial animation
-            // camera.position.lerp(new THREE.Vector3(0, 4, cameraDistance), 0.05);
+
             cameraPositionS.lerp(cameraPositionE, 0.05);
             state.camera.position.copy(cameraPositionS);
-        } else {
+            console.log('enter');
+
+        } else if (size.width < 1024) {
             // Damped camera movement based on mouse position
             const dampingFactor = 0.09;
             const springStrength = 0.01;
@@ -163,29 +167,35 @@ export default function Model({ NAME, choixcouleur }: ModelProps): JSX.Element {
             camera.position.y += velocityRef.current.y;
 
             // Keep Z position constant
+
+            camera.position.z = cameraDistance;
+
+        }
+        if (size.width < 1024) {
             camera.position.z = cameraDistance;
         }
-        if (size.width < 590) {
-            camera.position.z = cameraDistance + 2;
+        if (size.width < 800) {
+            camera.position.z = cameraDistance + 1;
         }
-        if (size.width < 400) {
+
+        if (size.width < 590) {
+
             camera.position.z = cameraDistance + 4;
         }
-        if (size.width < 300) {
+        if (size.width < 400) {
             camera.position.z = cameraDistance + 6;
         }
-        if (size.width < 200) {
+        if (size.width < 300) {
             camera.position.z = cameraDistance + 8;
         }
-    });
-    useEffect(() => {
-        if (isWindowBelow1024 && cameraControlsRef.current && cubeRef.current) {
-            cameraControlsRef.current.fitToBox(cubeRef.current, true);
+        if (size.width < 200) {
+            camera.position.z = cameraDistance + 10;
         }
-    }, [isWindowBelow1024]);
+    });
+
     const getTextScale = useCallback(
         (text: string, maxWidth: number, fontSize: number): number => {
-            const textWidth = text.length * fontSize * 0.4;
+            const textWidth = text.length * fontSize * 0.42;
             return textWidth > maxWidth ? maxWidth / textWidth : 1;
         },
         []
@@ -203,7 +213,6 @@ export default function Model({ NAME, choixcouleur }: ModelProps): JSX.Element {
                 position={groupPosition as [number, number, number]}
                 rotation={groupRotation as [number, number, number]}
             >
-                {isWindowBelow1024 && <CameraControls ref={cameraControlsRef} />}
                 <mesh ref={cubeRef} position-y={1} position-z={0}>
                     <boxGeometry args={[3.6, 3, 5]} />
                     <meshBasicMaterial wireframe visible={false} />
@@ -284,7 +293,7 @@ const Trophee = memo(({ CouleurTrophez }: TropheeProps) => {
                         size={2}
                         position={[0, 1.4, 0]}
                         speed={0.4}
-                        color={"#EED5D2"}
+                        color={"#F9D5C7"}
                     />
                 </mesh>
             </Float>
@@ -297,45 +306,52 @@ const Trophee = memo(({ CouleurTrophez }: TropheeProps) => {
                 castShadow
                 receiveShadow
             >
-                <meshStandardMaterial color={"#A17A74"} metalness={0} roughness={1} />
+                <meshStandardMaterial color={"#D8BFD8"} metalness={0} roughness={1} />
             </mesh>
             <mesh
-            castShadow
+                castShadow
                 geometry={nodes.Base_2.geometry}
                 material={nodes.Base_2.material}
+            // FA8072 D8BFD8
             >
+                <meshStandardMaterial color={"#625462"} metalness={0} roughness={1} 
+                
+                />
 
             </mesh>
             <mesh
-            castShadow
+                castShadow
                 geometry={nodes.Chapeau.geometry}
                 material={nodes.Chapeau.material}
             >
 
             </mesh>
             <mesh
-            castShadow
+                castShadow
                 geometry={nodes.cocarde.geometry}
                 material={nodes.cocarde.material}
             >
+                <meshStandardMaterial color={"#F82B5A"} metalness={0} roughness={1} />
+
 
             </mesh>
             <mesh
-            castShadow
+                castShadow
                 geometry={nodes.cocarde_1.geometry}
                 material={nodes.cocarde_1.material}
             >
 
             </mesh>
             <mesh
-            castShadow
+                castShadow
                 geometry={nodes.cocarde_2.geometry}
                 material={nodes.cocarde_2.material}
             >
+                <meshStandardMaterial color={"#FF5D83"} metalness={0} roughness={1} />
 
             </mesh>
             <mesh
-            castShadow
+                castShadow
                 geometry={nodes.Parchemin001
                     .geometry}
                 material={nodes.Parchemin001.material}
@@ -343,7 +359,7 @@ const Trophee = memo(({ CouleurTrophez }: TropheeProps) => {
 
             </mesh>
             <mesh
-            castShadow
+                castShadow
                 geometry={nodes.Parchemin001_1
                     .geometry}
                 material={nodes.Parchemin001_1.material}
