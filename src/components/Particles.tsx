@@ -5,15 +5,15 @@ import { MathUtils, Vector3, Color } from "three";
 import * as THREE from "three";
 
 useGLTF.preload("/model/tropheeBigChunks.glb");
-
-const particlesPerSide = 250;
+useGLTF.preload("/model/Particule.glb");
+const particlesPerSide = 75;
 const corridorWidth = 10;
 const corridorLength = 40;
 const corridorSpacing = 5;
-const wallHeight = 6; // Hauteur des murs de particules
-const wallBottom = -3; // Position verticale du bas des murs
+const wallHeight = 4; // Hauteur des murs de particules
+const wallBottom = -2; // Position verticale du bas des murs
 
-const baseColor = new Color("#6b4c85");
+const baseColor = new Color("#6b4c85");//FF5D83 6b4c85
 const generateColorVariation = () => {
   const hsl = { h: 0, s: 0, l: 0 };
   baseColor.getHSL(hsl);
@@ -57,7 +57,7 @@ function ParticlePARAM({ factor, speed, xFactor, yFactor, zFactor, color }: Part
   useFrame((state) => {
     const t = factor + state.clock.elapsedTime * (speed / 2);
 //@ts-ignore
-    ref.current.scale.setScalar(Math.max(0.1, Math.cos(t) * 0.5));
+    ref.current.scale.setScalar(Math.max(0.1, Math.cos(t) * .2));
 //@ts-ignore
     ref.current.position.set(
       xFactor,
@@ -65,11 +65,12 @@ function ParticlePARAM({ factor, speed, xFactor, yFactor, zFactor, color }: Part
       (zFactor + t * 10) % corridorLength - corridorLength / 2
     );
   });
-  return <Instance ref={ref} color={color} />;
+  return <Instance ref={ref} color={color}  />;
 }
 
 function Particle() {
   const { nodes } = useGLTF("/model/tropheeBigChunks.glb");
+    // const { nodes } = useGLTF("/model/Particule.glb");
   const trophyTops = useMemo(() => {
     // @ts-ignore
     return Array.from({ length: 6 }, (_, i) => nodes[`tropheeTop${i + 1}`].geometry);
@@ -79,10 +80,14 @@ function Particle() {
 <group rotation-y={Math.PI*0.5} position={[0,2,0]}>
 {trophyTops.map((geometry, index) => (
         <Instances key={index} limit={particles.length} castShadow receiveShadow>
-          <bufferGeometry {...geometry} />
-          <meshStandardMaterial roughness={1} metalness={0.1}/>
+          {/* <bufferGeometry {...geometry} /> */}
+            
+         
+          <sphereGeometry args={[0.2, 32, 32]} />
+          <meshStandardMaterial roughness={1} metalness={0.1} toneMapped={false} emissive={baseColor} emissiveIntensity={1} transparent  />
           {particles.filter(p => p.topIndex === index).map((data, i) => (
             <ParticlePARAM key={i} {...data} />
+            
           ))}
         </Instances>
       ))}

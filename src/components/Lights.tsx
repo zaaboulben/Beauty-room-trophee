@@ -30,7 +30,7 @@ const Lights = () => {
       //ref={light4}
       position={[-6, 7, 6]} target-position={[2.5,2,0]} intensity={2} shadow-normalBias={ 0.14 }  castShadow  />
 
-    <ambientLight intensity={1} >
+    <ambientLight intensity={4} >
 
     </ambientLight>
     </group>
