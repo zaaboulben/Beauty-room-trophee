@@ -1,6 +1,6 @@
 "use client";
 
-import { Center, Float, MeshReflectorMaterial, useAnimations, useGLTF, useTexture } from "@react-three/drei";
+import { Center, Float, MeshReflectorMaterial, Resize, useAnimations, useGLTF, useTexture } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import React, { useRef, useEffect, useState, memo, useMemo, useCallback, use } from "react";
 import * as THREE from "three";
@@ -8,23 +8,38 @@ import { useSpring, a } from '@react-spring/three';
 import { GLTF } from 'three-stdlib';
 import Particles from "./Particles";
 
-type GLTFResult = GLTF & {
-  nodes: {
-    [key: string]: THREE.Mesh;
-  };
-  animations: THREE.AnimationClip[];
-};
 
 useGLTF.preload("/model/tropheeBigChunks.glb");
-
-
 interface AnimatedMeshProps {
   geometry: THREE.BufferGeometry;
   material: THREE.Material;
   name: string;
   isVisible: boolean;
 }
-function AnimatedMesh({ geometry, material, name, isVisible }: AnimatedMeshProps) {
+
+interface MousePosition {
+  x: number;
+  y: number;
+}
+
+interface ParametresProps {
+  parametres: {
+      material: {
+          [key: string]: any;
+      };
+      floorColor: string;
+      particlecolor: string;
+  };
+}
+interface GLTFResult extends GLTF {
+  nodes: {
+      [key: string]: THREE.Mesh;
+  };
+  animations: THREE.AnimationClip[];
+}
+
+
+function AnimatedMesh({ geometry, material, name, isVisible }: AnimatedMeshProps ) {
   const meshRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
   const [mouseEntered, setMouseEntered] = useState(false);
@@ -75,6 +90,7 @@ function AnimatedMesh({ geometry, material, name, isVisible }: AnimatedMeshProps
       }
     }
   });
+ 
 
   return (
     <a.mesh
@@ -86,7 +102,7 @@ function AnimatedMesh({ geometry, material, name, isVisible }: AnimatedMeshProps
       position={spring.position}
       visible={isVisible}
     >
-
+     
     </a.mesh>
   );
 }
@@ -95,12 +111,14 @@ interface MousePosition {
   y: number;
 }
 
-export default function SceneAnimated() {
+export default function SceneAnimated( {parametres } :ParametresProps ) {
   const materialRef = useRef()
+console.log("parametres scene", parametres);
 
   const groupRef = useRef<THREE.Group>(null);
   //@ts-ignore
   const { nodes, animations, scene } = useGLTF("/model/tropheeBigChunks.glb") as GLTFResult;
+
   const { actions, mixer } = useAnimations(animations, groupRef);
   const [animationStarted, setAnimationStarted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -122,32 +140,15 @@ export default function SceneAnimated() {
   //   sheenRoughness={0.2}
   //   sheenColor="#FFD700"
   // />
+const matprops = parametres.material;
+  const material = new THREE.MeshPhysicalMaterial(
+    matprops
+  );
 
-  const material = new THREE.MeshPhysicalMaterial({
-    color: "#6b4c85",
-    roughness: 0.35,  // Légèrement réduit pour plus de brillance
-    metalness: 0.5,   // Légèrement augmenté
-    reflectivity: 1,  // Réduit car > 1 peut donner des résultats inattendus
-    clearcoat: 0.5,   // Légèrement augmenté
-    clearcoatRoughness: 0.1,
-    ior: 1.5,
-    fog: true,
-    envMapIntensity: 1.,  // Légèrement augmenté
-    emissive: "#6b4c85",
-    emissiveIntensity: 0.2,  // Augmenté
-    transmission: 0.3,  // Réduit
-    transparent: true,  // Changé à true
-    opacity: 1,
-    sheen: 0.3,  // Augmenté
-    sheenColor: "#AD86B1",
-    sheenRoughness: 0.1,  // Légèrement augmenté
-    iridescence: 1.1,
-    iridescenceIOR: 2.6,
-    precision: "highp",
-    specularIntensity: 0.9,
-    specularColor: "#AD86B1",
-  });
-
+  
+  
+  
+ 
 
   useEffect(() => {
     Object.values(actions).forEach((action) => {
@@ -174,12 +175,7 @@ export default function SceneAnimated() {
     };
   }, []);
   useFrame((state) => {
-    if (material) {
-      // material.roughness = 0.4 + Math.sin(state.clock.elapsedTime) * 0.05
-      // material.iridescence = 0.5 + Math.sin(state.clock.elapsedTime) * 0.5
-
-      
-    }
+    
     const camera = state.camera;
     const elapsedTime = state.clock.elapsedTime;
     const dampingFactor = 0.1;
@@ -213,8 +209,6 @@ export default function SceneAnimated() {
     if (mixer) {
       const delta = state.clock.getDelta();
       mixer.update(delta);
-      //timeclip 2.875
-      //0.9997182048983915
 
       Object.values(actions).forEach((action) => {
         if (action) {
@@ -251,12 +245,32 @@ export default function SceneAnimated() {
       <Center
         position={[0, 2, 0]}
       >
-        <OptimizedReflector />
+         <mesh
+      rotation={[-Math.PI / 2, 0, 0]}
+      position-y={0}
 
-        <group ref={groupRef} position-y={.5} position-z={-2} rotation-y={Math.PI * 0.5}>
+    >
+      <planeGeometry args={[1000, 1000]} />
+      <MeshReflectorMaterial
+        color={parametres.floorColor}  // Base color for the material 6b4c85
+        metalness={0}
+        roughness={1}
+        resolution={512}
+        mirror={0.4}
+        mixBlur={10.5}
+        mixStrength={1}
+        blur={[100, 100]}
+        depthScale={1.2}
+        minDepthThreshold={0.3}
+        maxDepthThreshold={1.5}
+      ></MeshReflectorMaterial>
+
+    </mesh>
+
+        <group ref={groupRef} position-y={.53} position-z={-2} rotation-y={Math.PI * 0.5}>
           <Float
             speed={2}
-            rotationIntensity={0.2}
+            rotationIntensity={0}
             floatIntensity={0.9}
             floatingRange={[-.2, .2]}
           >
@@ -280,28 +294,7 @@ export default function SceneAnimated() {
             })}
           </Float>
 
-          {/* <mesh
-          
-            
-            visible={isVisible}
-          >
-               <meshPhysicalMaterial
-        ref={materialRef}
-        color="#FFD700"
-        metalness={0.9}
-        roughness={0.2}
-        clearcoat={0.5}
-        clearcoatRoughness={0.3}
-        sheen={0.5}
-        sheenRoughness={0.2}
-        sheenColor="#FFD700"
-      />
-            <boxGeometry args={[1, 1, 1]} />
-          </mesh> */}
-
-
-
-          <Particles />
+          <Particles baseColor={parametres.particlecolor} />
         </group>
       </Center>
     </group>
@@ -310,7 +303,7 @@ export default function SceneAnimated() {
 
 
 
-const OptimizedReflector = memo(() => (
+const OptimizedReflector = memo((color) => (
   <>
 
     <mesh
@@ -320,7 +313,8 @@ const OptimizedReflector = memo(() => (
     >
       <planeGeometry args={[1000, 1000]} />
       <MeshReflectorMaterial
-        color={"#6b4c85"}
+      //@ts-ignore
+        color={color}  // Base color for the material 6b4c85
         metalness={0}
         roughness={1}
         resolution={512}

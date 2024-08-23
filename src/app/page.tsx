@@ -3,41 +3,30 @@ import dynamic from "next/dynamic";
 import HtmlText from "@/components/HtmlText";
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
+import Lights from "@/components/Lights";
+import SceneAnimated from "@/components/SceneAnimated";
+import { useControls } from "leva";
 
 const Scene = dynamic(() => import("@/components/Scene"), { ssr: false });
 
 export default function Home() {
   
+const {formationnumber}=useControls({
+  formationnumber: {
+    value: 1,
+    min: 1,
+    max: 4,
+    step: 1,
+  },
+});
 
   return (
+<Scene 
+nom = "tropheeBigChunks"
+formationNumber = {formationnumber}  
 
-    <main className="h-screen w-screen flex flex-col items-center justify-center">
-      <div className="relative w-full h-full">
-        <div className="absolute w-full h-full">
-        <Suspense fallback={null}>
-
-        <HtmlText />
-
-          <Canvas  
-           shadows={"soft"}   gl={{ antialias: true }} dpr={[1,2]} camera={{
-          fov: 60,
-          near: 0.1,
-          far: 100,
-          
-
-
-          } }  >
-            <Scene />
-            
-            <fog attach="fog" args={["#260226", 0.1, 25]} />
-
-
-          </Canvas>
-          </Suspense>
-
-        </div>
-      </div>
-    </main>
+/>
+  
   );
 }
 
