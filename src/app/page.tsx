@@ -11,21 +11,25 @@ const Scene = dynamic(() => import("@/components/Scene"), { ssr: false });
 
 export default function Home() {
   
-const {formationnumber}=useControls({
-  formationnumber: {
-    value: 1,
-    min: 1,
-    max: 4,
-    step: 1,
-  },
-});
+// const {formationnumber}=useControls({
+//   formationnumber: {
+//     value: 1,
+//     min: 1,
+//     max: 4,
+//     step: 1,
+//   },
+// });
+const formationnumber = 2;
 
   return (
+  
+
 <Scene 
 nom = "tropheeBigChunks"
 formationNumber = {formationnumber}  
 
 />
+
   
   );
 }

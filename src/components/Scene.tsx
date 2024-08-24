@@ -225,8 +225,7 @@ const Scene = ({ nom, formationNumber }: SceneProps) => {
 
 
     return (
-        <main className="h-screen w-screen flex flex-col items-center justify-center" style={{ backgroundColor: parametres.worldcolor }}>
-            <div className="relative w-full h-full">
+        <main className="   absolute w-full h-full " style={{ backgroundColor: parametres.worldcolor }}>
                 <div className="absolute w-full h-full">
                     <Suspense fallback={
                         <div className="absolute w-full h-full flex items-center justify-center">
@@ -234,7 +233,7 @@ const Scene = ({ nom, formationNumber }: SceneProps) => {
                         </div>
                     }>
 
-                        <HtmlText />
+                        {/* <HtmlText /> */}
 
                         <Canvas
                             shadows={"soft"} gl={{
@@ -251,16 +250,16 @@ const Scene = ({ nom, formationNumber }: SceneProps) => {
                             <Lights />
 
 
-                            <SceneAnimated parametres={parametres} />
-                            {/* <fog attach="fog" args={["#260226", 0.1, 25]} /> */} marron 6C3F17
-                            <fog attach="fog" args={[parametres.worldcolor, 0.1, 25]} />
+                            <SceneAnimated parametres={parametres}
+                            
+                            />
+                            <fog attach="fog" args={[parametres.worldcolor, 1, 20]} />
 
 
                         </Canvas>
                     </Suspense>
 
                 </div>
-            </div>
         </main>
 
 
