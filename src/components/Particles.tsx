@@ -61,9 +61,9 @@ function Particle({ baseColor }: ParticleProps) {
         };
     }, []);
     const corridorSpacingByScreen = useMemo(() => {
-        if (size.width < 500) {
+        if (size.width < 638) {
             return 2;
-        } else if (size.width < 600) {
+        } else if (size.width < 750) {
             return 3;
         } else if (size.width < 1024) {
             return 4;
@@ -72,9 +72,7 @@ function Particle({ baseColor }: ParticleProps) {
         }
     }
 
-        , [ 
-        size.width
-    ]);
+        , [ size.width]);
 
 
     const particlesData = useMemo(() => {
