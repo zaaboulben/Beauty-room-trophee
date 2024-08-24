@@ -72,7 +72,7 @@ function Particle({ baseColor }: ParticleProps) {
         }
     }
 
-        , [ size.width]);
+        , [size.width]);
 
 
     const particlesData = useMemo(() => {

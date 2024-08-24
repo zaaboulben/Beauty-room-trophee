@@ -261,7 +261,7 @@ setSize({
             color={parametres.floorColor} // Base color for the material 6b4c85
             metalness={0}
             roughness={1}
-            resolution={512}
+            resolution={1024}
             mirror={0.4}
             mixBlur={10.5}
             mixStrength={1}
